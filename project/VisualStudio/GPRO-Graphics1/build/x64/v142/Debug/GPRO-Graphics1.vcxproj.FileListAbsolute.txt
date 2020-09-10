@@ -1,0 +1,2 @@
+C:\Users\1fire\GPR_200\GPRO-Graphics1\lib\x64\v142\Debug\GPRO-Graphics1.pdb
+C:\Users\1fire\GPR_200\GPRO-Graphics1\project\VisualStudio\GPRO-Graphics1\build\x64\v142\Debug\GPRO-Graphics1.pdb
