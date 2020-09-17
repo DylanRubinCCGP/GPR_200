@@ -1,0 +1,73 @@
+
+//Effect Zero(Color Gradient)
+vec4 myEffectZero( in vec2 fragCoord, in vec2 uv)
+{
+
+vec3 color= vec3(uv,0.25);
+    
+float alpha = 1.0;
+    
+    
+
+return vec4(color,alpha);    
+}
+
+//Effect One (Checkerboard pattern)
+float myEffectOne (in vec2 fragCoord)
+{
+    //Determines size of boxes
+    float size= 10.0;
+    
+    //Floor is used here to round down to the nearest pixel assigned an integer. Then the "Size" covers every pixel within range.
+    vec2 pixelCoord=floor(fragCoord/size);
+    
+    //This checks to make sure that anything with an X or Y that doesn't have remainder when divided by two is a black pixel.
+    float checkerboard = mod(pixelCoord.x +pixelCoord.y, 2.0);
+    
+    
+	return checkerboard;
+}
+
+//Effect Two (Size changing circle.)
+vec4 myEffectTwo(in vec2 fragCoord, in vec2 uv)
+{
+    vec3 color= vec3(0.25,uv);
+    return vec4(color, 1.0);
+}
+
+//Effect Three (Checkerboard pattern error made into illusion. Custom Effect)
+float myEffectThree (in vec2 fragCoord, in float time)
+{
+    //Determines size of boxes
+    float size= abs(sin(time))*10.0;
+    
+    vec2 pixelCoord=(fragCoord/size);
+    float checkerboard = mod(pixelCoord.x +pixelCoord.y, 4.0);
+    
+    
+	return checkerboard;
+}
+
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv= fragCoord.xy/iResolution.xy;
+    
+    //Effect Two's variables. I couldn't figure out how to incorporate it into a function
+    vec2 center = vec2(0.5,0.5);
+    float radius = abs(sin(iTime))/2.0;
+    // Using these variables, I was able to create the if statement below.
+    // Using the Length() function I learned from (https://thebookofshaders.com/glossary/?search=length) I was able to
+    // find the length of the distance between the center of the circle and the farthest pixel within the radius.
+    
+    
+   if(length(center-uv) <radius)
+   {	
+        fragColor=myEffectThree(fragCoord, iTime)* myEffectTwo(fragCoord, uv);
+   }
+   else
+   {
+    fragColor= myEffectOne(fragCoord)* myEffectZero(fragCoord, uv);  
+   }
+  
+}
