@@ -1,3 +1,8 @@
+/*
+This assignment was written by Dylan Rubin. Sources used for research have respective comments where they are used.
+*/
+
+
 
 //Effect Zero(Color Gradient)
 vec4 myEffectZero( in vec2 fragCoord, in vec2 uv)
