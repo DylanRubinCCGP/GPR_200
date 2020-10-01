@@ -114,7 +114,7 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
     //Call the Lighting and initate it.
     sLight light;
     vec3 lCenter = vec3(0.3,0.3,-3.0);
-    initLight(light, lCenter ,vec3(1.0,1.0,1.0), 5.0);
+    initLight(light, lCenter ,vec3(1.0,1.0,1.0), 15.0);
     
     
 
@@ -139,7 +139,7 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
          float diffuseIntensity= difCo * attenuation;
         
         
-        vec3 color = vec3(diffuseIntensity);
+        vec3 color = vec3(diffuseIntensity*0.4*1.0, diffuseIntensity*0.6*1.0, diffuseIntensity*0.5*1.0);
         return vec4(color,1.0);
     }
     
