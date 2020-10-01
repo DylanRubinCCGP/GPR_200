@@ -100,7 +100,7 @@ float lengthSq(vec2 x)
 // calcColor: calculate the color of a pixel given a ray
 //    rayDirection: input ray direction
 //    rayOrigin:    input ray origin
-vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
+vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin, in vec3 viewport)
 {
     // DUMMY RESULT: OUTPUT RAY DIRECTION AS-IS
     //  -> what does the ray look like as color?
@@ -137,9 +137,12 @@ vec4 calcColor(in vec4 rayDirection, in vec4 rayOrigin)
          float disFromLight = distance(normal,lCenter); 
          float attenuation  = 1.0 /(1.0 + disFromLight/light.intensity + (disFromLight*disFromLight)/(light.intensity*light.intensity));
          float diffuseIntensity= difCo * attenuation;
+        vec3 viewVector= normalize(viewport-normal);
+        vec3 reflLight = reflect(lightVec,normal);
+        float specCo   = dot(viewVector,reflLight);
         
-        
-        vec3 color = vec3(diffuseIntensity*0.4*1.0, diffuseIntensity*0.6*1.0, diffuseIntensity*0.5*1.0);
+        //vec3 color = vec3(diffuseIntensity*0.4*1.0, diffuseIntensity*0.6*1.0, diffuseIntensity*0.5*1.0);
+        vec3 color= vec3(specCo);
         return vec4(color,1.0);
     }
     
@@ -170,5 +173,5 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     	             fragCoord, iResolution.xy);
     calcRay(rayDirection, rayOrigin, vec3(0.0), viewport);
     
-    fragColor += calcColor(rayDirection, rayOrigin);
+    fragColor += calcColor(rayDirection, rayOrigin,viewport);
 }
