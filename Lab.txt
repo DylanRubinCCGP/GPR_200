@@ -166,6 +166,20 @@ void initRayOrtho(out sRay ray,
     initRayPersp(ray, eyePosition + sBasis(viewport.xy, 0.0), viewport);
 }
 
+    struct sLight
+    {
+        vec4 center;
+        float intensity;
+        vec4 tex;
+    };
+       
+void initLight(out sLight light, in vec3 center, in vec4 tex, in float intensity)
+    {
+        light.center= asPoint(center);
+        light.intensity= intensity;
+        light.tex= tex;
+        
+    }
 
 //------------------------------------------------------------
 // RENDERING FUNCTIONS
@@ -195,6 +209,17 @@ vec2 distortedCoord(in sViewport vp, in sRay ray)
     return vec2(newVec2);
 }
 
+float Lambert(in sLight light, in vec3 normal, in vec3 lCenter)
+{
+    vec3 lightVec = normalize(lCenter-vec3(0.0,0.0,0.0));
+    float difCo =max(0.0,dot(normal,lightVec)); 
+    float disFromLight = distance(normal,lCenter); 
+    float attenuation  = 1.0 /(1.0 + disFromLight/light.intensity + (disFromLight*disFromLight)/(light.intensity*light.intensity));
+    float diffuseIntensity= difCo * attenuation;
+    return diffuseIntensity;
+}
+
+
 // calcColor: calculate the color of current pixel
 //	  vp:  input viewport info
 //	  ray: input ray info
@@ -206,16 +231,23 @@ color4 calcColor(in sViewport vp, in sRay ray)
     //return color4(vp.uv, 0.0, 0.0);
     //return color4(vp.ndc, 0.0, 0.0);
     //return vp.viewportPoint;
-    
-    
     sCoord px=distortedCoord(vp,ray);
-    
     sDCoord res= iChannelResolution[0].xy;    
     sCoord loc= px/res;
     sScalar ratio = res.y*vp.resolutionInv.y;
     loc = ratio *loc;
+    vec4 textPat= Crossfade(loc);
+    sLight light;
+    vec3 lCenter = vec3(sin(iTime)*.25,cos(iTime)*.25,1);
+    initLight(light, lCenter, textPat,1.0);
+    vec3 normal= normalize(vec3(vp.viewportPoint.xy,1));
     
-    return Crossfade(loc);
+
+    
+    vec4 final = vec4(textPat*Lambert(light, normal, lCenter));
+
+    
+    return final;
 
 }
 
