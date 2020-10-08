@@ -178,6 +178,23 @@ vec4 Crossfade( in sCoord loc)
     vec4 textureMix= mix(texture1,texture2,smoothstep(0.0,1.0,loc.y));
  	return textureMix;
 }
+
+vec2 distortedCoord(in sViewport vp, in sRay ray)
+{
+    vec2 newVec2;
+	vec2 center= vec2(0.0,0.0);
+    float radius= .5;
+    vec2 dp;
+    dp.xy= ray.direction.xy-center.xy;
+    float  r= 1.;
+	newVec2= vp.pixelCoord.xy;
+    if(length(dp.xy) <= radius)
+    {
+     newVec2 = (vp.pixelCoord.xy*tan(length(dp.xy)));
+    }
+    return vec2(newVec2);
+}
+
 // calcColor: calculate the color of current pixel
 //	  vp:  input viewport info
 //	  ray: input ray info
@@ -189,11 +206,15 @@ color4 calcColor(in sViewport vp, in sRay ray)
     //return color4(vp.uv, 0.0, 0.0);
     //return color4(vp.ndc, 0.0, 0.0);
     //return vp.viewportPoint;
-    sCoord px=vp.pixelCoord;
+    
+    
+    sCoord px=distortedCoord(vp,ray);
+    
     sDCoord res= iChannelResolution[0].xy;    
     sCoord loc= px/res;
     sScalar ratio = res.y*vp.resolutionInv.y;
     loc = ratio *loc;
+    
     return Crossfade(loc);
 
 }
