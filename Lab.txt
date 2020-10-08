@@ -183,14 +183,14 @@ vec2 distortedCoord(in sViewport vp, in sRay ray)
 {
     vec2 newVec2;
 	vec2 center= vec2(0.0,0.0);
-    float radius= .5;
+    float radius= .9;
     vec2 dp;
     dp.xy= ray.direction.xy-center.xy;
     float  r= 1.;
 	newVec2= vp.pixelCoord.xy;
     if(length(dp.xy) <= radius)
     {
-     newVec2 = (vp.pixelCoord.xy*tan(length(dp.xy)));
+     newVec2 = (vp.pixelCoord.xy*tan(length(dp.xy*radius)));
     }
     return vec2(newVec2);
 }
