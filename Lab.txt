@@ -238,7 +238,14 @@ color4 calcColor(in sViewport vp, in sRay ray)
     loc = ratio *loc;
     vec4 textPat= Crossfade(loc);
     sLight light;
-    vec3 lCenter = vec3(sin(iTime)*.25,cos(iTime)*.25,1);
+    vec3 lCenter;
+    vec2 mouse= iMouse.xy/res;
+    if(iMouse.z >0.5)
+    {
+     lCenter = vec3(mouse.x,mouse.y,1);    
+    }
+    else{ lCenter = vec3(sin(iTime)*.25,cos(iTime)*.25,1);}
+    
     initLight(light, lCenter, textPat,1.0);
     vec3 normal= normalize(vec3(vp.viewportPoint.xy,1));
     
